@@ -12,6 +12,7 @@ import {
 import { getAssetUrls } from "@tldraw/assets/selfHosted";
 
 import { isStoreUpdateEmpty, uploadAsset } from "../../libs/utils";
+import { getSnapshot, saveSnapshot } from "../../libs/storage";
 
 import { customShapeUtils, customTools } from "../../shapes";
 
@@ -33,39 +34,14 @@ export default function Editor() {
   });
 
   useLayoutEffect(() => {
-    const loadSnapshot = async () => {
+    const loadSnapshot = () => {
       setStatus({
         ...status,
         loading: true
       });
 
-      const req = await fetch(`/api/loadSnapshot/${projectId}`);
-
-      if (!req.ok) {
-        setStatus({
-          ...status,
-          loading: false,
-          error: true,
-          message: `${req.status}:${req.statusText}`
-        });
-
-        return;
-      }
-
-      const res = await req.json();
-
-      if (!res.status) {
-        setStatus({
-          ...status,
-          loading: false,
-          error: true,
-          message: res.message
-        });
-
-        return;
-      }
-
-      if (res.data.store) store.loadSnapshot(res.data);
+      const data = getSnapshot(projectId);
+      if (data.store) store.loadSnapshot(data);
 
       setStatus({
         ...status,
@@ -73,37 +49,11 @@ export default function Editor() {
       });
     };
 
-    const saveSnapshot = async () => {
-      let snapshot = JSON.stringify(store.getSnapshot());
-
-      const req = await fetch(`/api/snapshot/${projectId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: snapshot
-      });
-
-      if (!req.ok) {
-        alert("Changes could not be saved! (Check developer console).");
-        console.error(req.status, req.statusText);
-
-        return;
-      }
-
-      const res = await req.json();
-
-      if (!res.status) {
-        alert(`Changes could not be saved! (${res.message}).`);
-        console.error(res.message);
-      }
-    };
-
     const unlisten = store.listen(
       throttle((res) => {
         if (isStoreUpdateEmpty(res)) return;
 
-        saveSnapshot();
+        saveSnapshot(projectId, store.getSnapshot());
       }, 500)
     );
 
@@ -118,7 +68,7 @@ export default function Editor() {
       let asset = null;
 
       try {
-        asset = uploadAsset(projectId, file);
+        asset = await uploadAsset(projectId, file);
       } catch (err) {
         console.error(err);
       }

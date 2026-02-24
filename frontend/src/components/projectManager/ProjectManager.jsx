@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { getProjects, createProject } from "../../libs/storage";
 
 function ProjectManager() {
   const [isLoading, setIsLoading] = useState(false);
@@ -7,56 +8,15 @@ function ProjectManager() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      const req = await fetch("/api/projects");
-
-      if (!req.ok) {
-        alert("Error occured. Check 'Developer Console'");
-        throw Error(req.status, req.statusText);
-      }
-
-      const res = await req.json();
-
-      if (!res.status) {
-        alert("Error occured. Check 'Developer Console'");
-        throw Error(res.message);
-      }
-
-      return res.data;
-    };
-
     setIsLoading(true);
-
-    fetchProjects()
-      .then((res) => setProjects(res))
-      .catch((err) => console.error(err))
-      .finally(() => setIsLoading(false));
+    setProjects(getProjects());
+    setIsLoading(false);
   }, []);
 
-  const makeNewProject = async () => {
+  const makeNewProject = () => {
     setIsLoading(true);
-
-    const req = await fetch("/api/new");
-
-    if (!req.ok) {
-      alert("Error occured. Check 'Developer Console'");
-      console.error(req.status, req.statusText);
-
-      setIsLoading(false);
-      return;
-    }
-
-    const res = await req.json();
-
-    if (!res.status) {
-      alert("Error occured. Check 'Developer Console'");
-      console.error(res.message);
-
-      setIsLoading(false);
-      return;
-    }
-
-    navigate(`/edit/${res.data.key}`);
+    const project = createProject();
+    navigate(`/edit/${project.key}`);
   };
 
   const openProject = (ev) => {

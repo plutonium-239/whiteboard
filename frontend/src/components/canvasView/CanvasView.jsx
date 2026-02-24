@@ -14,6 +14,7 @@ import { customShapeUtils, customTools } from "../../shapes";
 
 import ViewUI from "./ViewUI";
 import { usePreloadAssets } from "../../hooks/usePreloadAssets";
+import { getSnapshot } from "../../libs/storage";
 
 const shapeUtils = [...defaultShapeUtils, ...customShapeUtils];
 const tools = [...defaultTools, ...customTools];
@@ -39,39 +40,14 @@ function CanvasView() {
   usePreloadAssets(assetUrls);
 
   useLayoutEffect(() => {
-    const loadSnapshot = async () => {
+    const loadSnapshot = () => {
       setStatus({
         ...status,
         loading: true
       });
 
-      const req = await fetch(`/api/loadSnapshot/${projectId}`);
-
-      if (!req.ok) {
-        setStatus({
-          ...status,
-          loading: false,
-          error: true,
-          message: `${req.status}:${req.statusText}`
-        });
-
-        return;
-      }
-
-      const res = await req.json();
-
-      if (!res.status) {
-        setStatus({
-          ...status,
-          loading: false,
-          error: true,
-          message: res.message
-        });
-
-        return;
-      }
-
-      if (res.data.store) store.loadSnapshot(res.data);
+      const data = getSnapshot(projectId);
+      if (data.store) store.loadSnapshot(data);
 
       setStatus({
         ...status,

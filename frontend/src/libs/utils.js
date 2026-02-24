@@ -9,7 +9,6 @@ import {
 } from "@tldraw/tldraw";
 
 const IMAGE_TYPES = ["image/jpeg", "image/png", "image/gif", "image/svg+xml"];
-const UPLOAD_URL = "/api/assets";
 
 export function groupByCount(arr, size = 1) {
   if (arr.length < size) return [arr];
@@ -58,24 +57,15 @@ export function isStoreUpdateEmpty(res) {
 export async function uploadAsset(projectId, file) {
   const id = uniqueId();
 
-  const objectName = `${id}-${file.name}`.replaceAll(/[^a-zA-Z0-9.]/g, "-");
-  const url = `${UPLOAD_URL}/${projectId}/${objectName}`;
-
-  const formData = new FormData();
-  formData.set("file", file);
-
-  const req = await fetch(url, {
-    method: "PUT",
-    body: formData
+  // Read the file as a data URL so no server upload is needed
+  const dataUrl = await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
   });
 
-  if (!req.ok) throw Error(`${req.status}:${req.statusText}`);
-
-  const res = await req.json();
-
-  if (!res.status) throw res.message;
-
-  const assetId = AssetRecordType.createId(getHashForString(url));
+  const assetId = AssetRecordType.createId(getHashForString(id + file.name));
 
   let size;
   let isAnimated;
@@ -83,12 +73,12 @@ export async function uploadAsset(projectId, file) {
 
   if (IMAGE_TYPES.includes(file.type)) {
     shapeType = "image";
-    size = await MediaHelpers.getImageSizeFromSrc(url);
+    size = await MediaHelpers.getImageSizeFromSrc(dataUrl);
     isAnimated = file.type === "image/gif" && (await isGifAnimated(file));
   } else {
     shapeType = "video";
     isAnimated = true;
-    size = await MediaHelpers.getVideoSizeFromSrc(url);
+    size = await MediaHelpers.getVideoSizeFromSrc(dataUrl);
   }
 
   const asset = AssetRecordType.create({
@@ -97,7 +87,7 @@ export async function uploadAsset(projectId, file) {
     typeName: "asset",
     props: {
       name: file.name,
-      src: url,
+      src: dataUrl,
       w: size.w,
       h: size.h,
       mimeType: file.type,
