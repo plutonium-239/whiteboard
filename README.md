@@ -1,26 +1,57 @@
 # Whiteboard
 
-[🚀 Install on Space](https://deta.space/discovery/@cemalgnlts/whiteboard)
+A drawing application where you can reflect your thoughts. It helps you convey your ideas in a more colorful and vivid way using shapes, icons, and emojis.
 
-# About the App
+## About
 
-Whiteboard is a drawing application where you can reflect your thoughts. It helps you convey your ideas in a more colorful and vivid way.
+Whiteboard lets you visualize ideas instead of writing plain text. You can use shapes, icons, and emojis in a simple but effective way. All data is stored locally in your browser — no server or account needed.
 
-# Concept
+> **Note:** Because storage is browser-local, drawings are not shared between devices or browsers. Clearing your browser's localStorage will delete your projects.
 
-It allows you to visualize all your ideas instead of putting them in plain text. Shapes, icons, emojis... it allows you to use them in the simplest but most effective way. You can share your drawings with anyone, all the images you add are stored in Deta Drive.
+## Setup
 
-**Look at an example**: [https://whiteboard-1-g2352340.deta.app/view/0rr42s7b1x8y](https://whiteboard-1-g2352340.deta.app/view/0rr42s7b1x8y)
+Requirements: Node.js 18+
 
-Although there is no tool for this, use the view path instead of edit to share the project:
-The url for editing looks like this: `https://whiteboard-1-g2352340.deta.app/edit/0rr42s7b1x8y`
-Add view instead of edit: `https://whiteboard-1-g2352340.deta.app/view/0rr42s7b1x8y`
+```bash
+npm install
+npm run dev
+```
 
-# Not completed!
+The app will be available at `http://localhost:5173`.
 
-Problems that cannot be solved due to lack of time:
+### Build for production
 
-- The created project cannot be deleted (this is not so bad).
-- The created page cannot be deleted (which is a bit bad).
-- Resources may load late, so you may see names instead of icons the first time, fonts may look broken, and you won't know the images are there until they load.
-* It does not ask for names when creating a project and adds random images.
+```bash
+npm run build
+npm run preview
+```
+
+## Project structure
+
+```
+whiteboard/
+├── src/            # React source code
+│   ├── components/ # UI components (editor, project manager, etc.)
+│   ├── libs/       # Storage helpers (localStorage)
+│   └── shapes/     # Custom tldraw shapes
+├── public/         # Static assets (fonts, emojis)
+├── index.html
+└── vite.config.js
+```
+
+## Storage
+
+Projects and drawings are persisted in `localStorage` under these keys:
+
+| Key | Contents |
+|-----|----------|
+| `whiteboard:projects` | Array of project metadata (id, name) |
+| `whiteboard:snapshot:{id}` | tldraw snapshot for a project |
+
+Images added to the canvas are converted to data URIs and stored inline — no external file storage is used.
+
+## Known limitations
+
+- Projects and pages cannot be deleted yet.
+- Resources (icons, fonts) may load slowly on first visit.
+- Project names are auto-generated; renaming is not yet supported.
