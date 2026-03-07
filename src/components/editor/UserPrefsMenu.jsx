@@ -68,9 +68,9 @@ function UserPrefsMenu({ editor }) {
         </li>
         <li tabIndex={0} onClick={toggleSnapMode}>
           <span className="material-symbols-rounded">
-            {snapMode ? "grid_3x3_off" : "grid_3x3"}
+            {snapMode ? "grid_3x3" : "grid_3x3_off"}
           </span>
-          {snapMode ? "Snap mode enabled" : "Snap mode disabled"}
+          Snap mode {snapMode ? "enabled" : "disabled"}
         </li>
       </ul>
     </div>
