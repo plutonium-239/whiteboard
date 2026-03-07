@@ -63,6 +63,34 @@ function CustomUI() {
     if (editor.zoomLevel > 1) editor.resetZoom();
   }, [editor]);
 
+  // Ctrl+scroll zoom
+  useEffect(() => {
+    /** @param {WheelEvent} ev */
+    const onWheel = (ev) => {
+      if (!ev.ctrlKey) return;
+      ev.preventDefault();
+
+      const { x: cx, y: cy, z: cz } = editor.camera;
+      const factor = ev.deltaY > 0 ? 0.95 : 1.05;
+      const newZoom = Math.min(Math.max(cz * factor, 0.1), 8);
+      const sx = ev.clientX;
+      const sy = ev.clientY;
+
+      // Adjust camera so the page point under cursor stays fixed
+      editor.setCamera({
+        x: cx + sx * (1 / newZoom - 1 / cz),
+        y: cy + sy * (1 / newZoom - 1 / cz),
+        z: newZoom
+      });
+    };
+
+    const container = document.querySelector(".tl-container");
+    if (container) {
+      container.addEventListener("wheel", onWheel, { passive: false });
+      return () => container.removeEventListener("wheel", onWheel);
+    }
+  }, [editor]);
+
   useEffect(() => {
     /** @param {KeyboardEvent} ev */
     const onKeyUp = (ev) => {

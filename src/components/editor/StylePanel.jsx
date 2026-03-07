@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { HexAlphaColorPicker } from "react-colorful";
 
-import { material as materialColors } from "../../libs/colors.json";
+import { material as defaultColors } from "../../libs/colors.json";
 import {
   DefaultColorStyle,
   DefaultColorThemePalette,
@@ -14,13 +14,17 @@ import {
 } from "@tldraw/tldraw";
 
 import { colord } from "colord";
+import { getSettings, saveSettings } from "../../libs/storage";
 
 import FillNoneIcon from "../../assets/icons/FillNoneIcon";
 import FillPatternIcon from "../../assets/icons/FillPatternIcon";
 import FillSemiIcon from "../../assets/icons/FillSemiIcon";
 import FillSolidIcon from "../../assets/icons/FillSolidIcon";
 
-const paletteColorNames = ["red", "green", "blue", "orange", "violet"];
+const paletteColorNames = [
+  "red", "green", "blue", "orange", "violet", "light-red",
+  "light-green", "light-blue", "yellow", "light-violet", "grey", "black"
+];
 
 const shapeSizeValues = ["s", "m", "l", "xl"];
 const borderStyleValues = ["solid", "dashed", "dotted", "draw"];
@@ -48,17 +52,27 @@ const fillStyleIcons = [
  * @returns
  */
 function StylePanel({ editor }) {
-  const [colors, setColors] = useState(materialColors);
+  const [colors, setColors] = useState(() => {
+    const saved = getSettings().customColors;
+    return saved && saved.length === defaultColors.length ? saved : [...defaultColors];
+  });
   const [activeColor, setActiveColor] = useState(undefined);
   const [shapeSize, setShapeSize] = useState(shapeSizeValues[0]);
   const [borderStyle, setBorderStyle] = useState(borderStyleValues[0]);
   const [fillStyle, setFillStyle] = useState(fillStyleValues[0]);
   const [fontStyle, setFontStyle] = useState("sans");
   const [isOpen, setIsOpen] = useState(false);
+  const [advancedOpen, setAdvancedOpen] = useState(false);
+  const [hexInput, setHexInput] = useState("");
 
   useEffect(() => {
     upateDefaultPalette();
   }, []);
+
+  // Sync hex input when active color changes
+  useEffect(() => {
+    if (activeColor) setHexInput(activeColor);
+  }, [activeColor]);
 
   // Colors
   useEffect(() => {
@@ -109,6 +123,7 @@ function StylePanel({ editor }) {
 
     setColors([...newPalette]);
     setActiveColor(color);
+    saveSettings({ ...getSettings(), customColors: newPalette });
   };
 
   const upateDefaultPalette = () => {
@@ -128,6 +143,22 @@ function StylePanel({ editor }) {
       DefaultColorThemePalette.lightMode[name].solid = solid;
       DefaultColorThemePalette.lightMode[name].semi = semi;
       DefaultColorThemePalette.lightMode[name].pattern = semi;
+    }
+  };
+
+  const resetColors = () => {
+    if (!window.confirm("Reset colors to defaults? Custom colors will be lost.")) return;
+    setColors([...defaultColors]);
+    setActiveColor(undefined);
+    saveSettings({ ...getSettings(), customColors: undefined });
+    upateDefaultPalette();
+  };
+
+  const onHexInputChange = (ev) => {
+    const value = ev.target.value;
+    setHexInput(value);
+    if (colord(value).isValid() && activeColor) {
+      onColorChange(value);
     }
   };
 
@@ -166,7 +197,16 @@ function StylePanel({ editor }) {
 
       <div className="style-panel__content">
         <section>
-          <h2>Color</h2>
+          <div className="color-section__header">
+            <h2>Color</h2>
+            <button
+              className="material-symbols-rounded"
+              title="Reset colors to defaults"
+              onClick={resetColors}
+            >
+              restart_alt
+            </button>
+          </div>
           <div className="style-panel__section__content">
             <div className="color-palette">
               {colors.map((color) => (
@@ -180,6 +220,26 @@ function StylePanel({ editor }) {
               ))}
             </div>
             <HexAlphaColorPicker color={activeColor} onChange={onColorChange} />
+            <button
+              className="advanced-color-toggle"
+              data-isopen={advancedOpen}
+              onClick={() => setAdvancedOpen(!advancedOpen)}
+            >
+              <span className="material-symbols-rounded">chevron_right</span>
+              Hex input
+            </button>
+            {advancedOpen && (
+              <div className="advanced-color-inputs">
+                <label>Hex</label>
+                <input
+                  type="text"
+                  value={hexInput}
+                  onChange={onHexInputChange}
+                  placeholder="#000000"
+                  spellCheck={false}
+                />
+              </div>
+            )}
           </div>
         </section>
 
