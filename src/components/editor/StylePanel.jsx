@@ -22,8 +22,8 @@ import FillSemiIcon from "../../assets/icons/FillSemiIcon";
 import FillSolidIcon from "../../assets/icons/FillSolidIcon";
 
 const paletteColorNames = [
-  "red", "green", "blue", "orange", "violet", "light-red",
-  "light-green", "light-blue", "yellow", "light-violet", "grey", "black"
+  "red", "green", "blue", "orange", "violet",
+  "light-red", "light-green", "light-blue", "yellow", "light-violet"
 ];
 
 const shapeSizeValues = ["s", "m", "l", "xl"];
@@ -228,8 +228,8 @@ function StylePanel({ editor }) {
               <span className="material-symbols-rounded">chevron_right</span>
               Hex input
             </button>
-            {advancedOpen && (
-              <div className="advanced-color-inputs">
+            <div className="advanced-color-inputs" data-isopen={advancedOpen}>
+              <div className="advanced-color-inputs__inner">
                 <label>Hex</label>
                 <input
                   type="text"
@@ -239,7 +239,7 @@ function StylePanel({ editor }) {
                   spellCheck={false}
                 />
               </div>
-            )}
+            </div>
           </div>
         </section>
 

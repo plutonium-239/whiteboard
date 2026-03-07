@@ -502,7 +502,7 @@ button[data-isactive="true"] {
 
 .color-palette {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 4px;
   margin-bottom: var(--space-2);
 }
@@ -576,6 +576,10 @@ button[data-isactive="true"] {
   background: none !important;
 }
 
+.advanced-color-toggle:active {
+  transform: none;
+}
+
 .advanced-color-toggle .material-symbols-rounded {
   font-size: 0.85rem !important;
   transition: transform 150ms ease;
@@ -586,6 +590,18 @@ button[data-isactive="true"] {
 }
 
 .advanced-color-inputs {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 200ms ease;
+  overflow: hidden;
+}
+
+.advanced-color-inputs[data-isopen="true"] {
+  grid-template-rows: 1fr;
+}
+
+.advanced-color-inputs__inner {
+  min-height: 0;
   display: flex;
   align-items: center;
   gap: var(--space-2);

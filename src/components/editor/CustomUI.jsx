@@ -63,11 +63,11 @@ function CustomUI() {
     if (editor.zoomLevel > 1) editor.resetZoom();
   }, [editor]);
 
-  // Ctrl+scroll zoom
+  // Ctrl/Cmd+scroll zoom
   useEffect(() => {
     /** @param {WheelEvent} ev */
     const onWheel = (ev) => {
-      if (!ev.ctrlKey) return;
+      if (!ev.ctrlKey && !ev.metaKey) return;
       ev.preventDefault();
 
       const { x: cx, y: cy, z: cz } = editor.camera;
@@ -84,11 +84,8 @@ function CustomUI() {
       });
     };
 
-    const container = document.querySelector(".tl-container");
-    if (container) {
-      container.addEventListener("wheel", onWheel, { passive: false });
-      return () => container.removeEventListener("wheel", onWheel);
-    }
+    document.addEventListener("wheel", onWheel, { passive: false, capture: true });
+    return () => document.removeEventListener("wheel", onWheel, { capture: true });
   }, [editor]);
 
   useEffect(() => {
