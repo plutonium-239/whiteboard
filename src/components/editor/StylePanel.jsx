@@ -56,7 +56,7 @@ function StylePanel({ editor }) {
     const saved = getSettings().customColors;
     return saved && saved.length === defaultColors.length ? saved : [...defaultColors];
   });
-  const [activeColor, setActiveColor] = useState(undefined);
+  const [activeIndex, setActiveIndex] = useState(-1);
   const [shapeSize, setShapeSize] = useState(shapeSizeValues[0]);
   const [borderStyle, setBorderStyle] = useState(borderStyleValues[0]);
   const [fillStyle, setFillStyle] = useState(fillStyleValues[0]);
@@ -64,6 +64,8 @@ function StylePanel({ editor }) {
   const [isOpen, setIsOpen] = useState(false);
   const [advancedOpen, setAdvancedOpen] = useState(false);
   const [hexInput, setHexInput] = useState("");
+
+  const activeColor = activeIndex >= 0 ? colors[activeIndex] : undefined;
 
   useEffect(() => {
     upateDefaultPalette();
@@ -76,15 +78,12 @@ function StylePanel({ editor }) {
 
   // Colors
   useEffect(() => {
-    if (activeColor === undefined) return;
-
-    const colorIndex = colors.findIndex((clr) => clr === activeColor);
-    const colorName = paletteColorNames[colorIndex];
+    if (activeIndex < 0) return;
 
     upateDefaultPalette();
 
-    applyStyle(DefaultColorStyle, colorName);
-  }, [activeColor]);
+    applyStyle(DefaultColorStyle, paletteColorNames[activeIndex]);
+  }, [activeIndex, colors]);
 
   // Size
   useEffect(() => applyStyle(DefaultSizeStyle, shapeSize), [shapeSize]);
@@ -117,12 +116,12 @@ function StylePanel({ editor }) {
   };
 
   const onColorChange = (color) => {
-    const newPalette = colors.map((prevColor) =>
-      prevColor === activeColor ? color : prevColor
-    );
+    if (activeIndex < 0) return;
 
-    setColors([...newPalette]);
-    setActiveColor(color);
+    const newPalette = [...colors];
+    newPalette[activeIndex] = color;
+
+    setColors(newPalette);
     saveSettings({ ...getSettings(), customColors: newPalette });
   };
 
@@ -149,7 +148,7 @@ function StylePanel({ editor }) {
   const resetColors = () => {
     if (!window.confirm("Reset colors to defaults? Custom colors will be lost.")) return;
     setColors([...defaultColors]);
-    setActiveColor(undefined);
+    setActiveIndex(-1);
     saveSettings({ ...getSettings(), customColors: undefined });
     upateDefaultPalette();
   };
@@ -157,7 +156,7 @@ function StylePanel({ editor }) {
   const onHexInputChange = (ev) => {
     const value = ev.target.value;
     setHexInput(value);
-    if (colord(value).isValid() && activeColor) {
+    if (colord(value).isValid() && activeIndex >= 0) {
       onColorChange(value);
     }
   };
@@ -209,13 +208,13 @@ function StylePanel({ editor }) {
           </div>
           <div className="style-panel__section__content">
             <div className="color-palette">
-              {colors.map((color) => (
+              {colors.map((color, idx) => (
                 <button
-                  key={color}
+                  key={idx}
                   className="color-palette__color small"
                   style={{ color }}
-                  data-isactive={activeColor === color}
-                  onClick={() => setActiveColor(color)}
+                  data-isactive={activeIndex === idx}
+                  onClick={() => setActiveIndex(idx)}
                 ></button>
               ))}
             </div>
