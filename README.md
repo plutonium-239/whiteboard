@@ -47,6 +47,7 @@ Projects and drawings are persisted in `localStorage` under these keys:
 |-----|----------|
 | `whiteboard:projects` | Array of project metadata (id, name) |
 | `whiteboard:snapshot:{id}` | tldraw snapshot for a project |
+| `whiteboard:settings` | UI settings (e.g. grid mode on/off) |
 
 Images added to the canvas are converted to data URIs and stored inline — no external file storage is used.
 
