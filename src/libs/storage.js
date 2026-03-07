@@ -1,4 +1,5 @@
 const PROJECTS_KEY = "whiteboard:projects";
+const SETTINGS_KEY = "whiteboard:settings";
 const snapshotKey = (id) => `whiteboard:snapshot:${id}`;
 
 export function getProjects() {
@@ -16,6 +17,14 @@ export function createProject() {
   projects.push(project);
   saveProjects(projects);
   return project;
+}
+
+export function getSettings() {
+  return JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}");
+}
+
+export function saveSettings(settings) {
+  localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
 }
 
 export function getSnapshot(id) {

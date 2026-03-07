@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { getSettings, saveSettings } from "../../libs/storage";
 
 /**
  *
@@ -31,6 +32,7 @@ function UserPrefsMenu({ editor }) {
     const value = !gridMode;
     editor.updateInstanceState({ isGridMode: value });
     setGridMode(value);
+    saveSettings({ ...getSettings(), isGridMode: value });
 
     setIsOpen(false);
   };
@@ -68,7 +70,7 @@ function UserPrefsMenu({ editor }) {
           <span className="material-symbols-rounded">
             {snapMode ? "grid_3x3_off" : "grid_3x3"}
           </span>
-          Toggle snap mode
+          {snapMode ? "Snap mode enabled" : "Snap mode disabled"}
         </li>
       </ul>
     </div>
