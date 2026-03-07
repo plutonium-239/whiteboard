@@ -12,7 +12,7 @@ import {
 import { getAssetUrls } from "@tldraw/assets/selfHosted";
 
 import { isStoreUpdateEmpty, uploadAsset } from "../../libs/utils";
-import { getSnapshot, saveSnapshot } from "../../libs/storage";
+import { getSnapshot, saveSnapshot, getSettings } from "../../libs/storage";
 
 import { customShapeUtils, customTools } from "../../shapes";
 
@@ -63,6 +63,11 @@ export default function Editor() {
   }, [store]);
 
   const onMount = useCallback((editor) => {
+    const settings = getSettings();
+    if (settings.isGridMode !== undefined) {
+      editor.updateInstanceState({ isGridMode: settings.isGridMode });
+    }
+
     // When a user uploads a file, create an asset from it
     editor.registerExternalAssetHandler("file", async ({ file }) => {
       let asset = null;
