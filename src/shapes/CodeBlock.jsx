@@ -1,11 +1,11 @@
 import {
   BaseBoxShapeTool,
   BaseBoxShapeUtil,
-  Box2d,
+  Box,
   HTMLContainer,
   T,
   DefaultSizeStyle
-} from "@tldraw/tldraw";
+} from "tldraw";
 
 import hljs from "../assets/highlightjs/highlight.js";
 import { useEffect, useState } from "react";
@@ -38,7 +38,7 @@ export class CodeBlockShapeUtil extends BaseBoxShapeUtil {
    * @param {CodeBlockShapeUtil} shape
    */
   component(shape) {
-    const isDarkMode = this.editor.user.isDarkMode;
+    const isDarkMode = this.editor.user.getIsDarkMode();
     const isSelected = this.editor.onlySelectedShape?.id === shape.id;
     let fontSize = 0.75;
 
@@ -201,7 +201,7 @@ export class CodeBlockShapeUtil extends BaseBoxShapeUtil {
   }
 
   getBounds(shape) {
-    return new Box2d(0, 0, shape.props.w, shape.props.h);
+    return new Box(0, 0, shape.props.w, shape.props.h);
   }
 
   indicator(shape) {

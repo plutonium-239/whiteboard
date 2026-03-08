@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 
-import { track, useEditor } from "@tldraw/tldraw";
+import { track, useEditor } from "tldraw";
 
 function ViewUI() {
   const editor = useEditor();
   const [tool, setTool] = useState(editor.currentToolId);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(editor.user.isDarkMode);
+  const [isDarkMode, setIsDarkMode] = useState(editor.user.getIsDarkMode());
 
   useEffect(() => {
     const onKeyDown = (ev) => {
@@ -77,7 +77,7 @@ function ViewUI() {
     const value = !isDarkMode;
 
     editor.user.updateUserPreferences({
-      isDarkMode: value
+      colorScheme: value ? "dark" : "light"
     });
 
     setIsDarkMode(value);
@@ -91,7 +91,7 @@ function ViewUI() {
   return (
     <div
       className={`canvas-view-ui tl-container tl-theme__${
-        editor.user.isDarkMode ? "dark" : "light"
+        editor.user.getIsDarkMode() ? "dark" : "light"
       }`}
     >
       <header className="appBar">

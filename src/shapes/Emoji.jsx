@@ -1,9 +1,9 @@
 import {
   BaseBoxShapeTool,
   BaseBoxShapeUtil,
-  Box2d,
+  Box,
   SVGContainer
-} from "@tldraw/tldraw";
+} from "tldraw";
 
 export class EmojiShapeTool extends BaseBoxShapeTool {
   static id = "emoji";
@@ -57,7 +57,7 @@ export class EmojiShapeUtil extends BaseBoxShapeUtil {
   }
 
   getBounds(shape) {
-    return new Box2d(0, 0, shape.props.w, shape.props.h);
+    return new Box(0, 0, shape.props.w, shape.props.h);
   }
 
   indicator(shape) {

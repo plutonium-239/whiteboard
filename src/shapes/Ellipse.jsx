@@ -1,4 +1,4 @@
-import { BaseBoxShapeTool } from "@tldraw/tldraw";
+import { BaseBoxShapeTool } from "tldraw";
 
 export class EllipseShapeTool extends BaseBoxShapeTool {
   static id = "ellipse";

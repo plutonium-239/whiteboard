@@ -1,13 +1,15 @@
 import { useState, useLayoutEffect, useCallback } from "react";
 
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 
 import {
   Tldraw,
   createTLStore,
   defaultShapeUtils,
-  throttle
-} from "@tldraw/tldraw";
+  throttle,
+  getSnapshot as getTlSnapshot,
+  loadSnapshot as loadTlSnapshot
+} from "tldraw";
 
 import { getAssetUrls } from "@tldraw/assets/selfHosted";
 
@@ -41,7 +43,7 @@ export default function Editor() {
       });
 
       const data = getSnapshot(projectId);
-      if (data.store) store.loadSnapshot(data);
+      if (data.store) loadTlSnapshot(store, data);
 
       setStatus({
         ...status,
@@ -53,7 +55,7 @@ export default function Editor() {
       throttle((res) => {
         if (isStoreUpdateEmpty(res)) return;
 
-        saveSnapshot(projectId, store.getSnapshot());
+        saveSnapshot(projectId, getTlSnapshot(store));
       }, 500)
     );
 

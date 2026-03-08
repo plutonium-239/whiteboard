@@ -1,14 +1,14 @@
 import { useState, useLayoutEffect, useEffect } from "react";
 
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 
 import {
-  Canvas,
   TldrawEditor,
   createTLStore,
   defaultShapeUtils,
-  defaultTools
-} from "@tldraw/tldraw";
+  defaultTools,
+  loadSnapshot as loadTlSnapshot
+} from "tldraw";
 
 import { customShapeUtils, customTools } from "../../shapes";
 
@@ -47,7 +47,7 @@ function CanvasView() {
       });
 
       const data = getSnapshot(projectId);
-      if (data.store) store.loadSnapshot(data);
+      if (data.store) loadTlSnapshot(store, data);
 
       setStatus({
         ...status,
@@ -98,7 +98,6 @@ function CanvasView() {
         onMount={onMount}
         autoFocus
       >
-        <Canvas />
         <ViewUI />
       </TldrawEditor>
     </div>

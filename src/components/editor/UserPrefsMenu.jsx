@@ -4,17 +4,17 @@ import { getSettings, saveSettings } from "../../libs/storage";
 /**
  *
  * @param {Object} param0
- * @param {import("@tldraw/tldraw").Editor} param0.editor
+ * @param {import("tldraw").Editor} param0.editor
  */
 function UserPrefsMenu({ editor }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [isDarkTheme, setIsDarkTheme] = useState(editor.user.isDarkMode);
-  const [gridMode, setGridMode] = useState(editor.instanceState.isGridMode);
-  const [snapMode, setSnapMode] = useState(editor.user.isSnapMode);
+  const [isDarkTheme, setIsDarkTheme] = useState(editor.user.getIsDarkMode());
+  const [gridMode, setGridMode] = useState(editor.getInstanceState().isGridMode);
+  const [snapMode, setSnapMode] = useState(editor.user.getIsSnapMode());
 
   const toggleTheme = () => {
     const value = !isDarkTheme;
-    editor.user.updateUserPreferences({ isDarkMode: value });
+    editor.user.updateUserPreferences({ colorScheme: value ? "dark" : "light" });
     setIsDarkTheme(value);
 
     setIsOpen(false);

@@ -1,12 +1,11 @@
 import {
-  Box2d,
+  Box,
   compact,
   AssetRecordType,
   getHashForString,
-  isGifAnimated,
   uniqueId,
   MediaHelpers
-} from "@tldraw/tldraw";
+} from "tldraw";
 
 const IMAGE_TYPES = ["image/jpeg", "image/png", "image/gif", "image/svg+xml"];
 
@@ -23,10 +22,10 @@ export function groupByCount(arr, size = 1) {
 
 export function duplicateShapes(editor) {
   const ids = editor.selectedShapeIds;
-  const commonBounds = Box2d.Common(
+  const commonBounds = Box.Common(
     compact(ids.map((id) => editor.getShapePageBounds(id)))
   );
-  const offset = editor.instanceState.canMoveCamera
+  const offset = editor.getInstanceState().canMoveCamera
     ? {
         x: commonBounds.width + 10,
         y: 0
@@ -36,7 +35,7 @@ export function duplicateShapes(editor) {
         y: 16 / editor.zoomLevel
       };
 
-  editor.mark("duplicate shapes");
+  editor.markHistoryStoppingPoint("duplicate shapes");
   editor.duplicateShapes(ids, offset);
 }
 
@@ -73,12 +72,12 @@ export async function uploadAsset(projectId, file) {
 
   if (IMAGE_TYPES.includes(file.type)) {
     shapeType = "image";
-    size = await MediaHelpers.getImageSizeFromSrc(dataUrl);
-    isAnimated = file.type === "image/gif" && (await isGifAnimated(file));
+    size = await MediaHelpers.getImageSize(dataUrl);
+    isAnimated = file.type === "image/gif" && (await MediaHelpers.isAnimated(file));
   } else {
     shapeType = "video";
     isAnimated = true;
-    size = await MediaHelpers.getVideoSizeFromSrc(dataUrl);
+    size = await MediaHelpers.getVideoSize(dataUrl);
   }
 
   const asset = AssetRecordType.create({

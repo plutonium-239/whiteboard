@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 
-import "@tldraw/tldraw/tldraw.css";
+import "tldraw/tldraw.css";
 import "./index.css";
 
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router";
 
 import Editor from "./components/editor/Editor";
 import ProjectManager from "./components/projectManager";

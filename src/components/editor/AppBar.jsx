@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 
 import { duplicateShapes } from "../../libs/utils";
-import { getIncrementedName, uniqueId } from "@tldraw/tldraw";
-import { useNavigate } from "react-router-dom";
+import { getIncrementedName, uniqueId } from "tldraw";
+import { useNavigate } from "react-router";
 
 /**
  *
  * @param {Object} param0
- * @param {import("@tldraw/tldraw").Editor} param0.editor
+ * @param {import("tldraw").Editor} param0.editor
  * @returns
  */
 function AppBar({ editor, isViewOnly }) {
@@ -29,8 +29,8 @@ function AppBar({ editor, isViewOnly }) {
       setSelectedShapes(editor.selectedShapes);
     };
 
-    editor.addListener("change", onHistoryChange);
-    return () => editor.removeListener("change", onHistoryChange);
+    const unlisten = editor.store.listen(onHistoryChange);
+    return () => unlisten();
   }, [editor]);
 
   const undo = () => editor.undo();

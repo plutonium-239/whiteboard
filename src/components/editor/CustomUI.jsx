@@ -1,6 +1,6 @@
 import { useRef, useEffect, useCallback } from "react";
 
-import { useEditor, track } from "@tldraw/tldraw";
+import { useEditor, track } from "tldraw";
 
 import "./styles.css";
 

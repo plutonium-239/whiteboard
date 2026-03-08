@@ -11,7 +11,7 @@ import {
   DefaultFontFamilies,
   DefaultFontStyle,
   DefaultSizeStyle
-} from "@tldraw/tldraw";
+} from "tldraw";
 
 import { colord } from "colord";
 
@@ -44,7 +44,7 @@ const fillStyleIcons = [
 /**
  *
  * @param {Object} param0
- * @param {import("@tldraw/tldraw").Editor} param0.editor
+ * @param {import("tldraw").Editor} param0.editor
  * @returns
  */
 function StylePanel({ editor }) {

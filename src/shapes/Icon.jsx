@@ -1,12 +1,12 @@
 import {
   BaseBoxShapeTool,
   BaseBoxShapeUtil,
-  Box2d,
+  Box,
   DefaultColorStyle,
   SVGContainer,
   T,
   getDefaultColorTheme
-} from "@tldraw/tldraw";
+} from "tldraw";
 
 export class IconShapeTool extends BaseBoxShapeTool {
   static id = "icon";
@@ -48,7 +48,7 @@ export class IconShapeUtil extends BaseBoxShapeUtil {
    */
   component(shape) {
     const theme = getDefaultColorTheme({
-      isDarkMode: this.editor.user.isDarkMode
+      isDarkMode: this.editor.user.getIsDarkMode()
     });
     const color = theme[shape.props.color].solid;
 
@@ -77,7 +77,7 @@ export class IconShapeUtil extends BaseBoxShapeUtil {
   }
 
   getBounds(shape) {
-    return new Box2d(0, 0, shape.props.w, shape.props.h);
+    return new Box(0, 0, shape.props.w, shape.props.h);
   }
 
   indicator(shape) {
