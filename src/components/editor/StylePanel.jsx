@@ -67,10 +67,11 @@ function StylePanel({ editor }) {
 
   const activeColor = activeIndex >= 0 ? colors[activeIndex] : undefined;
 
-  // Update global palette whenever colors change (including on mount)
+  // Update global palette on mount only (not during editing, to avoid
+  // retroactively changing existing shapes that share the color name)
   useEffect(() => {
     upateDefaultPalette();
-  }, [colors]);
+  }, []);
 
   // Sync hex input when active color changes
   useEffect(() => {
