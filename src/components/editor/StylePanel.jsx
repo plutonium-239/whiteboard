@@ -67,23 +67,22 @@ function StylePanel({ editor }) {
 
   const activeColor = activeIndex >= 0 ? colors[activeIndex] : undefined;
 
+  // Update global palette whenever colors change (including on mount)
   useEffect(() => {
     upateDefaultPalette();
-  }, []);
+  }, [colors]);
 
   // Sync hex input when active color changes
   useEffect(() => {
     if (activeColor) setHexInput(activeColor);
   }, [activeColor]);
 
-  // Colors
+  // When selecting a palette slot, apply the color to shapes
   useEffect(() => {
     if (activeIndex < 0) return;
 
-    upateDefaultPalette();
-
     applyStyle(DefaultColorStyle, paletteColorNames[activeIndex]);
-  }, [activeIndex, colors]);
+  }, [activeIndex]);
 
   // Size
   useEffect(() => applyStyle(DefaultSizeStyle, shapeSize), [shapeSize]);
@@ -150,7 +149,6 @@ function StylePanel({ editor }) {
     setColors([...defaultColors]);
     setActiveIndex(-1);
     saveSettings({ ...getSettings(), customColors: undefined });
-    upateDefaultPalette();
   };
 
   const onHexInputChange = (ev) => {
