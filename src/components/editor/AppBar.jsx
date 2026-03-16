@@ -59,7 +59,6 @@ function AppBar({ editor, isViewOnly }) {
   };
 
   const fitToScreen = () => {
-    editor.updateViewportScreenBounds(true);
     editor.zoomToFit();
 
     if (editor.getZoomLevel() > 1) editor.resetZoom();

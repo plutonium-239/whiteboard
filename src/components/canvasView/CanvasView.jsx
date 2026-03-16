@@ -61,7 +61,6 @@ function CanvasView() {
   useEffect(() => {
     if (editor === null || status.loading === true) return;
 
-    editor.updateViewportScreenBounds(true);
     editor.zoomToFit();
 
     if (editor.getZoomLevel() > 1) editor.resetZoom();

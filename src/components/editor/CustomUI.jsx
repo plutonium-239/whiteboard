@@ -57,7 +57,6 @@ function CustomUI() {
   }, []);
 
   useEffect(() => {
-    editor.updateViewportScreenBounds(true);
     editor.zoomToFit();
 
     if (editor.getZoomLevel() > 1) editor.resetZoom();
