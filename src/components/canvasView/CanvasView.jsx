@@ -64,7 +64,7 @@ function CanvasView() {
     editor.updateViewportScreenBounds(true);
     editor.zoomToFit();
 
-    if (editor.zoomLevel > 1) editor.resetZoom();
+    if (editor.getZoomLevel() > 1) editor.resetZoom();
   }, [status]);
 
   const onMount = (editor) => {

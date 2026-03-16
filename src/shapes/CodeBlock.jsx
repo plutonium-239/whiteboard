@@ -39,7 +39,7 @@ export class CodeBlockShapeUtil extends BaseBoxShapeUtil {
    */
   component(shape) {
     const isDarkMode = this.editor.user.getIsDarkMode();
-    const isSelected = this.editor.onlySelectedShape?.id === shape.id;
+    const isSelected = this.editor.getOnlySelectedShape()?.id === shape.id;
     let fontSize = 0.75;
 
     const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);

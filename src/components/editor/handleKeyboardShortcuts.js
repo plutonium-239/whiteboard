@@ -50,7 +50,7 @@ function handleKeyboardShortcuts(ev, editor, lastChoices) {
       break;
     case "Delete":
     case "Backspace":
-      editor.deleteShapes(editor.selectedShapeIds);
+      editor.deleteShapes(editor.getSelectedShapeIds());
       break;
     case "f":
       editor.zoomToSelection({

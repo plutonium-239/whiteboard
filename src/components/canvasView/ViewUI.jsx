@@ -4,7 +4,7 @@ import { track, useEditor } from "tldraw";
 
 function ViewUI() {
   const editor = useEditor();
-  const [tool, setTool] = useState(editor.currentToolId);
+  const [tool, setTool] = useState(editor.getCurrentToolId());
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(editor.user.getIsDarkMode());
 
@@ -38,16 +38,16 @@ function ViewUI() {
   // }, [currentPage]);
 
   const nextPage = () => {
-    const pages = editor.pages;
-    let index = pages.findIndex((p) => p.id === editor.currentPagId) + 1;
+    const pages = editor.getPages();
+    let index = pages.findIndex((p) => p.id === editor.getCurrentPageId()) + 1;
 
     if (index > pages.length) index = pages.length - 1;
     editor.setCurrentPage(pages[index]);
   };
 
   const prevPage = () => {
-    const pages = editor.pages;
-    let index = pages.findIndex((p) => p.id === editor.currentPageId) - 1;
+    const pages = editor.getPages();
+    let index = pages.findIndex((p) => p.id === editor.getCurrentPageId()) - 1;
 
     if (index < pages.length) index = 0;
 
@@ -56,7 +56,7 @@ function ViewUI() {
 
   const changePage = (ev) => {
     const id = ev.target.dataset.id;
-    editor.setCurrentPage(editor.pages.find((p) => p.id === id));
+    editor.setCurrentPage(editor.getPages().find((p) => p.id === id));
 
     fitScreen();
     setIsMenuOpen(false);
@@ -66,7 +66,7 @@ function ViewUI() {
     editor.updateViewportScreenBounds(true);
     editor.zoomToFit();
 
-    if (editor.zoomLevel > 1) editor.resetZoom();
+    if (editor.getZoomLevel() > 1) editor.resetZoom();
   };
 
   const openPageMenu = () => {
@@ -101,16 +101,16 @@ function ViewUI() {
             onClick={openPageMenu}
             data-isactive={isMenuOpen}
           >
-            {editor.currentPage.name}
+            {editor.getCurrentPage().name}
           </button>
 
           <ul className="container select-list" onClick={changePage}>
-            {editor.pages.map((page) => (
+            {editor.getPages().map((page) => (
               <li
                 key={page.id}
                 tabIndex={0}
                 data-id={page.id}
-                data-isactive={page.id === editor.currentPageId}
+                data-isactive={page.id === editor.getCurrentPageId()}
               >
                 {page.name}
               </li>

@@ -93,7 +93,7 @@ function StylePanel({ editor }) {
   };
 
   const blinkStyle = () => {
-    const selectedIds = editor.selectedShapeIds;
+    const selectedIds = editor.getSelectedShapeIds();
 
     if (selectedIds.length === 0) return;
 

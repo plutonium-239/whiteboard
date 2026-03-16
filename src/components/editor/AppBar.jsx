@@ -12,21 +12,21 @@ import { useNavigate } from "react-router";
  */
 function AppBar({ editor, isViewOnly }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [selectedShapes, setSelectedShapes] = useState(editor.selectedShapeIds);
+  const [selectedShapes, setSelectedShapes] = useState(editor.getSelectedShapeIds());
   const [{ canUndo, canRedo }, setHistoryState] = useState({
-    canUndo: editor.canUndo,
-    canRedo: editor.canRedo
+    canUndo: editor.getCanUndo(),
+    canRedo: editor.getCanRedo()
   });
   const navigate = useNavigate();
 
   useEffect(() => {
     const onHistoryChange = () => {
       setHistoryState({
-        canUndo: editor.canUndo,
-        canRedo: editor.canRedo
+        canUndo: editor.getCanUndo(),
+        canRedo: editor.getCanRedo()
       });
 
-      setSelectedShapes(editor.selectedShapes);
+      setSelectedShapes(editor.getSelectedShapes());
     };
 
     const unlisten = editor.store.listen(onHistoryChange);
@@ -40,7 +40,7 @@ function AppBar({ editor, isViewOnly }) {
 
   const addNewPage = (ev) => {
     ev.stopPropagation();
-    const pageNames = editor.pages.map((page) => page.name);
+    const pageNames = editor.getPages().map((page) => page.name);
     const name = getIncrementedName("Page", [...pageNames, "Page"]);
     const id = `page:${uniqueId()}`;
 
@@ -62,7 +62,7 @@ function AppBar({ editor, isViewOnly }) {
     editor.updateViewportScreenBounds(true);
     editor.zoomToFit();
 
-    if (editor.zoomLevel > 1) editor.resetZoom();
+    if (editor.getZoomLevel() > 1) editor.resetZoom();
   };
 
   const openPageMenu = () => {
@@ -85,7 +85,7 @@ function AppBar({ editor, isViewOnly }) {
           onClick={openPageMenu}
           data-isactive={isMenuOpen}
         >
-          {editor.currentPage.name}
+          {editor.getCurrentPage().name}
         </button>
 
         <ul className="container select-list" onClick={changePage}>
@@ -94,12 +94,12 @@ function AppBar({ editor, isViewOnly }) {
             <span className="material-symbols-rounded">add</span>
             <span></span>
           </li>
-          {editor.pages.map((page) => (
+          {editor.getPages().map((page) => (
             <li
               key={page.id}
               tabIndex={0}
               data-id={page.id}
-              data-isactive={page.id === editor.currentPageId}
+              data-isactive={page.id === editor.getCurrentPageId()}
             >
               {page.name}
             </li>

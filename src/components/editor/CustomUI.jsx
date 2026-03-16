@@ -60,7 +60,7 @@ function CustomUI() {
     editor.updateViewportScreenBounds(true);
     editor.zoomToFit();
 
-    if (editor.zoomLevel > 1) editor.resetZoom();
+    if (editor.getZoomLevel() > 1) editor.resetZoom();
   }, [editor]);
 
   useEffect(() => {
@@ -95,7 +95,7 @@ function CustomUI() {
 
   const onToolSelect = useCallback(
     (tool, info) => {
-      if (tool === editor.currentToolId) editor.currentTool.enter(info);
+      if (tool === editor.getCurrentToolId()) editor.getCurrentTool().enter(info);
       else editor.setCurrentTool(tool, info);
 
       if (info) {
@@ -117,7 +117,7 @@ function CustomUI() {
               key={type}
               className="material-symbols-rounded"
               onClick={onToolSelect.bind(null, type)}
-              data-isactive={editor.currentToolId === type}
+              data-isactive={editor.getCurrentToolId() === type}
               title={title}
             >
               {icon}
@@ -131,7 +131,7 @@ function CustomUI() {
       <ExtraShapeTabs
         tabs={extraTools}
         onToolSelect={onToolSelect}
-        currentToolId={editor.currentToolId}
+        currentToolId={editor.getCurrentToolId()}
       />
 
       <StylePanel editor={editor} />

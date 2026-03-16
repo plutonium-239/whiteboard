@@ -21,7 +21,7 @@ export function groupByCount(arr, size = 1) {
 }
 
 export function duplicateShapes(editor) {
-  const ids = editor.selectedShapeIds;
+  const ids = editor.getSelectedShapeIds();
   const commonBounds = Box.Common(
     compact(ids.map((id) => editor.getShapePageBounds(id)))
   );
@@ -31,8 +31,8 @@ export function duplicateShapes(editor) {
         y: 0
       }
     : {
-        x: 16 / editor.zoomLevel,
-        y: 16 / editor.zoomLevel
+        x: 16 / editor.getZoomLevel(),
+        y: 16 / editor.getZoomLevel()
       };
 
   editor.markHistoryStoppingPoint("duplicate shapes");
