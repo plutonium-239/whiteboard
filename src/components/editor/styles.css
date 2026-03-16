@@ -1,10 +1,10 @@
 .container {
   position: absolute;
-  z-index: var(--layer-panels);
-  padding: var(--space-2);
-  background-color: var(--color-panel);
-  border-radius: var(--radius-2);
-  box-shadow: var(--shadow-1);
+  z-index: var(--tl-layer-panels);
+  padding: var(--tl-space-2);
+  background-color: var(--tl-color-panel);
+  border-radius: var(--tl-radius-2);
+  box-shadow: var(--tl-shadow-1);
 }
 
 .toolbar {
@@ -27,7 +27,7 @@
 }
 
 .toolbar > * + * {
-  margin-left: var(--space-1);
+  margin-left: var(--tl-space-1);
 }
 
 .right-aside {
@@ -46,19 +46,19 @@
 .tab-buttons {
   display: flex;
   flex-direction: column;
-  margin-right: var(--space-5);
+  margin-right: var(--tl-space-5);
 }
 
 .tab-buttons > * + * {
-  margin-top: var(--space-1);
+  margin-top: var(--tl-space-1);
 }
 
 .tab-buttons,
 .tab-contents {
-  padding: var(--space-2);
-  background-color: var(--color-panel);
-  border-radius: var(--radius-2);
-  box-shadow: var(--shadow-1);
+  padding: var(--tl-space-2);
+  background-color: var(--tl-color-panel);
+  border-radius: var(--tl-radius-2);
+  box-shadow: var(--tl-shadow-1);
 }
 
 .tab-contents {
